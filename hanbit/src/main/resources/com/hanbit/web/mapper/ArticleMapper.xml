@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hanbit.web.mapper.ArticleMapper">
+	<insert id="insert" parameterType="com.hanbit.web.board.ArticleDTO">
+		INSERT INTO Article
+		(group_id,sequence_no,posting_date,read_count,writer_name,password,title,content)
+		VALUES (1,'abcd',NOW(),0,#{writerName},#{password},#{title},#{content})		
+	</insert>
+	<select id="selectAll" resultType="com.hanbit.web.board.ArticleDTO" 
+		parameterType="com.hanbit.web.global.Command">
+		SELECT article_id AS articleId,
+			group_id AS groupId,
+			sequence_no AS sequenceNo,
+			DATE_FORMAT(posting_date,'%Y-%m-%d') AS postingDate,
+			read_count AS readCount,
+			writer_name AS writerName,
+			password,
+			title,
+			content
+		FROM Article 
+			ORDER BY sequence_no 
+			DESC LIMIT #{startRow}, #{endRow}
+		
+	</select>
+	<select id="selectById" resultType="com.hanbit.web.board.ArticleDTO" parameterType="com.hanbit.web.board.ArticleDTO">
+		SELECT article_id AS articleId,
+			group_id AS groupId,
+			sequence_no AS sequenceNo,
+			DATE_FORMAT(posting_date,'%Y-%m-%d') AS postingDate,
+			read_count AS readCount,
+			writer_name AS writerName,
+			password,
+			title,
+			content
+		FROM Article 
+		WHERE article_id = #{articleId}
+	</select>
+		<select id="boardDetail" resultType="com.hanbit.web.board.ArticleDTO" parameterType="string" >
+		SELECT article_id AS articleId,
+			group_id AS groupId,
+			sequence_no AS sequenceNo,
+			DATE_FORMAT(posting_date,'%Y-%m-%d') AS postingDate,
+			read_count AS readCount,
+			writer_name AS writerName,
+			password,
+			title,
+			content
+		FROM Article 
+		WHERE article_id = #{articleId}
+	</select>
+	<select id="selectByName" resultType="com.hanbit.web.board.ArticleDTO" 
+		parameterType="com.hanbit.web.global.Command">
+		SELECT article_id AS articleId,
+			group_id AS groupId,
+			sequence_no AS sequenceNo,
+			DATE_FORMAT(posting_date,'%Y-%m-%d') AS postingDate,
+			read_count AS readCount,
+			writer_name AS writerName,
+			password,
+			title
+		FROM Article 
+			WHERE ${keyField} LIKE CONCAT('%',#{keyWord},'%')
+			ORDER BY sequence_no 
+			DESC LIMIT #{startRow}, #{endRow}
+	</select>
+	<select id="count" resultType="int">
+		SELECT COUNT(*)
+		FROM Article
+	</select>
+	<update id="update">
+			update Article 
+			set title= #{title},
+			writer_name= #{writerName},
+			password= #{password},
+			content= #{content},
+			posting_date = now()
+			where article_id = #{articleId}	
+	</update>
+	<delete id="delete" parameterType="com.hanbit.web.board.ArticleDTO">
+		DELETE FROM Article
+		WHERE article_id = #{articleId}
+	</delete>
+
+ 	<insert id="addReplay" parameterType="hashmap" >
+		INSERT INTO Reply
+		(reply,article_id,reply_date)
+		VALUES (#{reply},#{articleId},NOW())		
+	</insert>
+	 
+	<select id="getReply" resultType="com.hanbit.web.board.ReplyDTO" parameterType="string">
+		SELECT reply, 
+		DATE_FORMAT(reply_date,'%Y-%m-%d') AS replyDate
+		FROM Reply WHERE article_id = #{articleId}
+	</select>
+</mapper>

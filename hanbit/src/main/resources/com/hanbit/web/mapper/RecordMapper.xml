@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hanbit.web.mapper.RecordMapper">
+ 
+	<select id="selectList" resultType="com.hanbit.web.record.RecordDTO"
+		parameterType="com.hanbit.web.record.RecordDTO">
+		select * from Record
+	</select>
+	<select id="selectByName" resultType="com.hanbit.web.record.RecordDTO"
+		parameterType="com.hanbit.web.record.RecordCommand">
+		SELECT 
+		seq,
+		score,
+		id,
+		name,
+		subject,
+		examDate,
+		prof_id AS profId,
+		prof_Name AS profName
+		FROM Record 
+		WHERE name = #{name} 
+	</select>
+	<select id="selectById" resultType="com.hanbit.web.record.RecordDTO"
+		parameterType="com.hanbit.web.record.RecordCommand">
+		SELECT 
+		seq,
+		score,
+		id,
+		name,
+		subject,
+		examDate,
+		prof_id AS profId,
+		prof_Name AS profName
+		FROM Record 
+		WHERE id = #{id} 
+	</select>
+	<select id="selectByIdWithExamDate" resultType="com.hanbit.web.record.RecordDTO"
+		parameterType="com.hanbit.web.record.RecordDTO">
+		SELECT 
+		seq,
+		score,
+		id,
+		name,
+		subject,
+		examDate 
+		FROM Record 
+		WHERE id = #{id} AND examDate = #{examDate};
+	</select>
+ 
+	<select id="count" resultType="int">
+		SELECT COUNT(*) FROM Record
+	</select>
+	<update id="update" parameterType="com.hanbit.web.record.RecordDTO">
+	UPDATE Record set score = #{score} WHERE id = #{id} AND examDate = #{examDate} AND subject=#{subject}
+	</update>
+ 
+</mapper>
